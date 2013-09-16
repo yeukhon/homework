@@ -1,0 +1,181 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CompTrapez</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-20"><meta name="DC.source" content="CompTrapez.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% CSC 301 Scientific Computing Fall 2012</span>
+<span class="comment">% Author:   Yeukhon Wong</span>
+<span class="comment">% Homework #4</span>
+<span class="comment">% Problem 1</span>
+
+<span class="keyword">function</span> [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] = CompTrapez(f, a, b, bound)
+<span class="comment">% Use Composite Trapezoidal Rule to determines</span>
+<span class="comment">% the ideal number of intervals reuired</span>
+<span class="comment">% to approximate input function f to within</span>
+<span class="comment">% input bound, as well as the value of the</span>
+<span class="comment">% approximation and expected, and value of error.</span>
+<span class="comment">%</span>
+<span class="comment">% Parameters:</span>
+<span class="comment">%      f:  sym</span>
+<span class="comment">%        the function to approximate</span>
+<span class="comment">%      a, b : num</span>
+<span class="comment">%        the start and end point of the integration, respectively</span>
+<span class="comment">%      bound : num</span>
+<span class="comment">%        the numeric range of acceptance of the approximation</span>
+<span class="comment">% Usage:</span>
+<span class="comment">%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompTrapez(f, a, b, bound)</span>
+
+<span class="comment">% first, find the second derivative of f and determine the f"(mu) in</span>
+<span class="comment">% the interval mu = [a, b]</span>
+<span class="comment">% Note we don't step over the entire interval to find mu which is bad. It's</span>
+<span class="comment">% okay for now...</span>
+format <span class="string">LONGE</span>;
+f_2 = diff(diff(f));
+f2_mu_a = subs(f_2, {<span class="string">'x'</span>}, {a});
+f2_mu_b = subs(f_2, {<span class="string">'x'</span>}, {b});
+f2_mu_mid = subs(f_2, {<span class="string">'x'</span>}, {(a+b)/2});
+f2_mu = max( [f2_mu_a, f2_mu_mid, f2_mu_b] );
+
+<span class="comment">% next, find the step length h</span>
+<span class="comment">% remember E_tpz is |((b-a) f"(mu) h^2 / 12)| &lt;= acceptance bound</span>
+<span class="comment">% after algebraic ==&gt; h^2 = (bound * 12) / ((b-a)*f"(mu))</span>
+top = bound * 12;
+bottom = (b-a) * f2_mu;
+t_h = sqrt(top / bottom);
+
+<span class="comment">% finally, t_n is t_h = (b-a)/t_n</span>
+t_n = (b-a)/t_h;
+
+<span class="comment">% finally, t_n must be ceiling</span>
+t_n = ceil(t_n);
+
+<span class="comment">% let us now find the value of the approximation</span>
+num_pts = t_n + 1;
+xs = [a:t_h:b];
+xs(num_pts) = b;  <span class="comment">% we need to include the end point.</span>
+fxk(1:num_pts) = subs(f, {<span class="string">'x'</span>}, {xs(1:num_pts)});
+t_appx = double(trapz(xs, fxk)); <span class="comment">% approximation</span>
+
+t_exp = double(int(f, a, b));  <span class="comment">% expected value</span>
+t_e = double(abs(t_exp - t_appx)); <span class="comment">% error</span>
+t_bound_flag = t_e &lt;= bound;
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #4
+% Problem 1
+
+function [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] = CompTrapez(f, a, b, bound)
+% Use Composite Trapezoidal Rule to determines
+% the ideal number of intervals reuired
+% to approximate input function f to within
+% input bound, as well as the value of the 
+% approximation and expected, and value of error.
+%
+% Parameters:
+%      f:  sym
+%        the function to approximate
+%      a, b : num
+%        the start and end point of the integration, respectively
+%      bound : num
+%        the numeric range of acceptance of the approximation
+% Usage:
+%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompTrapez(f, a, b, bound)
+
+% first, find the second derivative of f and determine the f"(mu) in
+% the interval mu = [a, b]
+% Note we don't step over the entire interval to find mu which is bad. It's
+% okay for now...
+format LONGE;
+f_2 = diff(diff(f));
+f2_mu_a = subs(f_2, {'x'}, {a});
+f2_mu_b = subs(f_2, {'x'}, {b});
+f2_mu_mid = subs(f_2, {'x'}, {(a+b)/2});
+f2_mu = max( [f2_mu_a, f2_mu_mid, f2_mu_b] );
+
+% next, find the step length h
+% remember E_tpz is |((b-a) f"(mu) h^2 / 12)| <= acceptance bound
+% after algebraic ==> h^2 = (bound * 12) / ((b-a)*f"(mu))
+top = bound * 12;
+bottom = (b-a) * f2_mu;
+t_h = sqrt(top / bottom);
+
+% finally, t_n is t_h = (b-a)/t_n
+t_n = (b-a)/t_h;
+
+% finally, t_n must be ceiling
+t_n = ceil(t_n);
+
+% let us now find the value of the approximation
+num_pts = t_n + 1;
+xs = [a:t_h:b];
+xs(num_pts) = b;  % we need to include the end point.
+fxk(1:num_pts) = subs(f, {'x'}, {xs(1:num_pts)});
+t_appx = double(trapz(xs, fxk)); % approximation
+
+t_exp = double(int(f, a, b));  % expected value
+t_e = double(abs(t_exp - t_appx)); % error 
+t_bound_flag = t_e <= bound;
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,101 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CSEval</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-04"><meta name="DC.source" content="CSEval.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Problem 2 # helper</span>
+
+<span class="keyword">function</span> Fvals = CSEval(F,T,tvals)
+<span class="comment">% Fvals = CSEval(F,T,tvals)</span>
+<span class="comment">% F.a is a length m+1 column vector, F.b is a length m-1 column vector,</span>
+<span class="comment">% T is a positive scalar, and tvals is a column vector.</span>
+<span class="comment">% If</span>
+<span class="comment">%   F(t)  = F.a(1) + F.a(2)*cos((2*pi/T)*t) +...+ F.a(m+1)*cos((2*m*pi/T)*t) +</span>
+<span class="comment">%                    F.b(1)*sin((2*pi/T)*t) +...+ F.b(m-1)*sin((2*m*pi/T)*t)</span>
+<span class="comment">%</span>
+<span class="comment">% then Fvals = F(tvals).</span>
+
+Fvals = zeros(length(tvals),1);
+tau = (2*pi/T)*tvals;
+<span class="keyword">for</span> j=0:length(F.a)-1, Fvals = Fvals + F.a(j+1)*cos(j*tau); <span class="keyword">end</span>
+<span class="keyword">for</span> j=1:length(F.b),   Fvals = Fvals + F.b(j)*sin(j*tau); <span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Problem 2 # helper
+
+function Fvals = CSEval(F,T,tvals)
+% Fvals = CSEval(F,T,tvals)
+% F.a is a length m+1 column vector, F.b is a length m-1 column vector, 
+% T is a positive scalar, and tvals is a column vector.
+% If 
+%   F(t)  = F.a(1) + F.a(2)*cos((2*pi/T)*t) +...+ F.a(m+1)*cos((2*m*pi/T)*t) + 
+%                    F.b(1)*sin((2*pi/T)*t) +...+ F.b(m-1)*sin((2*m*pi/T)*t)
+%
+% then Fvals = F(tvals).    
+
+Fvals = zeros(length(tvals),1);
+tau = (2*pi/T)*tvals;
+for j=0:length(F.a)-1, Fvals = Fvals + F.a(j+1)*cos(j*tau); end
+for j=1:length(F.b),   Fvals = Fvals + F.b(j)*sin(j*tau); end
+##### SOURCE END #####
+--></body></html>

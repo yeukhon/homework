@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>q1</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-04"><meta name="DC.source" content="q1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Yeukhon Wong</span>
+<span class="comment">% CSC 301 Fall 2012</span>
+<span class="comment">% Homework # 5  Problem #1</span>
+
+d = [30 35 40 45 50 55 60 65 70 75];
+i = [0.85 0.67 0.52 0.42 0.34 0.28 0.24 0.21 0.18 0.15];
+len = length(d);
+
+<span class="comment">% 1A find the best fit quadratic function</span>
+soln_A = BestFitNOrder(d, i, 2);
+a0 = soln_A(1);
+a1 = soln_A(2);
+a2 = soln_A(3);
+<span class="keyword">for</span> j=1:length(d)
+    fxa(j) = a2*d(j)^2 + a1*d(j) + a0;
+<span class="keyword">end</span>
+
+<span class="comment">% 1B find the best fit exponetial function</span>
+soln_B = BestFitExp(d, i);
+b0 = soln_B(1);
+b1 = soln_B(2);
+B = exp(b0); <span class="comment">% coefficent of Be^(bx)</span>
+<span class="keyword">for</span> j=1:length(d)
+    fxb(j) = B*exp(b1*d(j));
+<span class="keyword">end</span>
+
+
+<span class="comment">% 1C find the inteprolating polynomial</span>
+cc = InterpN2(d,i);
+fcf = strcat(<span class="string">'cc(1)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(2)*(x-30)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(3)*(x-30)*(x-35)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(4)*(x-30)*(x-35)*(x-40)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(5)*(x-30)*(x-35)*(x-40)*(x-45)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(6)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(7)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(8)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(9)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)*(x-65)'</span><span class="keyword">...</span>
+    ,<span class="string">'+cc(10)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)*(x-65)*(x-70)'</span>);
+fcy = [];
+<span class="keyword">for</span> j=1:len
+    fcy(j) = eval(strrep(fcf, <span class="string">'x'</span>, num2str(d(j))));
+<span class="keyword">end</span>
+
+
+<span class="comment">%1D find the interpolating cubic spline</span>
+[D, Dxs, DcubicY, dc] = CubicSpline(d, i);
+hold <span class="string">on</span>
+plot(d, i, <span class="string">'-m^'</span>) <span class="comment">% expected</span>
+plot(d,fxa, <span class="string">'-bx'</span>) <span class="comment">% quadratic</span>
+plot(d, fxb, <span class="string">'-gd'</span>) <span class="comment">% exponetial</span>
+plot(d, DcubicY, <span class="string">'-c*'</span>) <span class="comment">% cubic spline</span>
+
+plot(d, fcy, <span class="string">'-ks'</span>); <span class="comment">% Polynomial</span>
+legend(<span class="string">'expected'</span>, <span class="string">'quadratic'</span>, <span class="string">'exponetial'</span>, <span class="string">'cubic spline'</span>, <span class="string">'polynomial'</span>)
+hold <span class="string">off</span>
+
+<span class="comment">% plot expected vs each approximation graph</span>
+
+figure
+plot(d, i, <span class="string">'-m^'</span>, d, fxa, <span class="string">'-bx'</span>)
+legend(<span class="string">'expected'</span>, <span class="string">'quadratic'</span>)
+
+figure
+plot(d, i, <span class="string">'-m^'</span>, d, fxb, <span class="string">'-gd'</span>)
+legend(<span class="string">'expected'</span>, <span class="string">'exponetial'</span>)
+
+figure
+plot(d, i, <span class="string">'-m^'</span>, d, DcubicY, <span class="string">'-c*'</span>)
+legend(<span class="string">'expected'</span>, <span class="string">'cubic spline'</span>)
+
+
+figure
+plot(d, i, <span class="string">'-m^'</span>, d, fcy, <span class="string">'-ks'</span>);
+legend(<span class="string">'expected'</span>, <span class="string">'polynomial'</span>)
+</pre><img vspace="5" hspace="5" src="q1_01.png" alt=""> <img vspace="5" hspace="5" src="q1_02.png" alt=""> <img vspace="5" hspace="5" src="q1_03.png" alt=""> <img vspace="5" hspace="5" src="q1_04.png" alt=""> <img vspace="5" hspace="5" src="q1_05.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Yeukhon Wong
+% CSC 301 Fall 2012
+% Homework # 5  Problem #1
+
+d = [30 35 40 45 50 55 60 65 70 75];
+i = [0.85 0.67 0.52 0.42 0.34 0.28 0.24 0.21 0.18 0.15];
+len = length(d);
+
+% 1A find the best fit quadratic function
+soln_A = BestFitNOrder(d, i, 2);
+a0 = soln_A(1);
+a1 = soln_A(2);
+a2 = soln_A(3);
+for j=1:length(d)
+    fxa(j) = a2*d(j)^2 + a1*d(j) + a0;
+end
+
+% 1B find the best fit exponetial function
+soln_B = BestFitExp(d, i);
+b0 = soln_B(1);
+b1 = soln_B(2);
+B = exp(b0); % coefficent of Be^(bx)
+for j=1:length(d)
+    fxb(j) = B*exp(b1*d(j));
+end
+
+
+% 1C find the inteprolating polynomial
+cc = InterpN2(d,i);
+fcf = strcat('cc(1)'...
+    ,'+cc(2)*(x-30)'...
+    ,'+cc(3)*(x-30)*(x-35)'...
+    ,'+cc(4)*(x-30)*(x-35)*(x-40)'...
+    ,'+cc(5)*(x-30)*(x-35)*(x-40)*(x-45)'...
+    ,'+cc(6)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)'...
+    ,'+cc(7)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)'...
+    ,'+cc(8)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)'...
+    ,'+cc(9)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)*(x-65)'...
+    ,'+cc(10)*(x-30)*(x-35)*(x-40)*(x-45)*(x-50)*(x-55)*(x-60)*(x-65)*(x-70)');
+fcy = [];
+for j=1:len
+    fcy(j) = eval(strrep(fcf, 'x', num2str(d(j))));
+end
+
+
+%1D find the interpolating cubic spline
+[D, Dxs, DcubicY, dc] = CubicSpline(d, i);
+hold on
+plot(d, i, '-m^') % expected
+plot(d,fxa, '-bx') % quadratic
+plot(d, fxb, '-gd') % exponetial
+plot(d, DcubicY, '-c*') % cubic spline
+
+plot(d, fcy, '-ks'); % Polynomial
+legend('expected', 'quadratic', 'exponetial', 'cubic spline', 'polynomial')
+hold off
+
+% plot expected vs each approximation graph
+
+figure
+plot(d, i, '-m^', d, fxa, '-bx')
+legend('expected', 'quadratic')
+
+figure
+plot(d, i, '-m^', d, fxb, '-gd')
+legend('expected', 'exponetial')
+
+figure
+plot(d, i, '-m^', d, DcubicY, '-c*')
+legend('expected', 'cubic spline')
+
+
+figure
+plot(d, i, '-m^', d, fcy, '-ks');
+legend('expected', 'polynomial')
+
+
+
+##### SOURCE END #####
+--></body></html>

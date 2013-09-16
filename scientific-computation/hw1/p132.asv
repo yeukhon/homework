@@ -1,0 +1,16 @@
+clear all;
+clc;
+
+% given number of trials 100, step 100, up to 800
+% step through as a vector of size (number of trials)
+disp('    n                Uniform                Normal            ')
+for n = 100:100:800
+    coeffs = rand(n,3); % a,b,c for 100 times  [100 by 3]
+    % for each row of nth trial, do b^2 - 4*a*c < 0 and record the result
+    complex_uni = zeros(n,1);
+    for i = 1:1:100
+        % the result will be 1 if it is less than zero (true statement)
+        complex_uni(i) = (coeffs(i, 2).^2 - 4*coeffs(i, 1) * coeffs(i, 3)) < 0;  
+    end
+    prob_uni = sum(complex_uni); % sum
+end

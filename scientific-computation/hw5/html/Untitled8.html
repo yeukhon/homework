@@ -1,0 +1,111 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Untitled8</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-04"><meta name="DC.source" content="Untitled8.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Yeukhon Wong</span>
+<span class="comment">% Homework #5 Problem #2</span>
+
+<span class="comment">% Modify CSInterp so it uses FFT.</span>
+
+<span class="comment">% Script File: Pallas</span>
+<span class="comment">% Plots the trigonometric interpolant of the Gauss Pallas data.</span>
+
+A = linspace(0,360,8)';
+D = [ 408 89 -66 10 338 807 1238 1511]';
+
+Avals = linspace(0,360,200)';
+F = CSInterp(D(1:8));
+Fvals = CSeval(F,360,Avals);
+
+plot(Avals,Fvals,A,D,<span class="string">'o'</span>);
+axis([-10 370 -200 1700]);
+set(gca,<span class="string">'xTick'</span>,linspace(0,360,8));
+xlabel(<span class="string">'Ascension (Degrees)'</span>);
+ylabel(<span class="string">'Declination (minutes)'</span>);
+</pre><pre class="codeoutput">Warning: Imaginary parts of complex X and/or Y arguments ignored 
+</pre><img vspace="5" hspace="5" src="Untitled8_01.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Yeukhon Wong
+% Homework #5 Problem #2
+
+% Modify CSInterp so it uses FFT.
+
+% Script File: Pallas
+% Plots the trigonometric interpolant of the Gauss Pallas data.
+
+A = linspace(0,360,8)';
+D = [ 408 89 -66 10 338 807 1238 1511]';
+
+Avals = linspace(0,360,200)'; 
+F = CSInterp(D(1:8));
+Fvals = CSeval(F,360,Avals);
+
+plot(Avals,Fvals,A,D,'o');
+axis([-10 370 -200 1700]);
+set(gca,'xTick',linspace(0,360,8));
+xlabel('Ascension (Degrees)');
+ylabel('Declination (minutes)');
+
+##### SOURCE END #####
+--></body></html>

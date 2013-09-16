@@ -1,0 +1,143 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CompGaussQaud</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-20"><meta name="DC.source" content="CompGaussQaud.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% CSC 301 Scientific Computing Fall 2012</span>
+<span class="comment">% Author:   Yeukhon Wong</span>
+<span class="comment">% Homework #4</span>
+<span class="comment">% Problem 1</span>
+
+<span class="keyword">function</span> [gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n] = CompGaussQaud( f, a, b, bound, m)
+<span class="comment">% Use Composite Gaussian quadrature to determines</span>
+<span class="comment">% the ideal number of intervals reuired</span>
+<span class="comment">% to approximate input function f to within</span>
+<span class="comment">% input bound, as well as the value of the</span>
+<span class="comment">% approximation and expected, and value of error.</span>
+<span class="comment">%</span>
+<span class="comment">% Parameters:</span>
+<span class="comment">%      f:  sym</span>
+<span class="comment">%        the function to approximate</span>
+<span class="comment">%      a, b : num</span>
+<span class="comment">%        the start and end point of the integration, respectively</span>
+<span class="comment">%      bound : num</span>
+<span class="comment">%        the numeric range of acceptance of the approximation</span>
+<span class="comment">%      m  : num</span>
+<span class="comment">%       number of points to use</span>
+<span class="comment">% Usage:</span>
+<span class="comment">%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompGaussQaud(f, a, b, bound, m)</span>
+format <span class="string">longe</span>;
+
+[w,x] = GLWeights(m);
+tildec = (b-a)/2*w;
+tildex = (b-a)/2*x + (b+a)/2;
+fx = subs(f, {<span class="string">'x'</span>}, {tildex});
+gq_appx = sum(tildec.*fx);
+
+gq_exp = double(int(f, a, b));
+gq_e = abs(gq_exp - gq_appx);
+gq_bound_flag = gq_e &lt; bound;
+gq_n = m-1;
+<span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #4
+% Problem 1
+
+function [gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n] = CompGaussQaud( f, a, b, bound, m)
+% Use Composite Gaussian quadrature to determines
+% the ideal number of intervals reuired
+% to approximate input function f to within
+% input bound, as well as the value of the 
+% approximation and expected, and value of error.
+%
+% Parameters:
+%      f:  sym
+%        the function to approximate
+%      a, b : num
+%        the start and end point of the integration, respectively
+%      bound : num
+%        the numeric range of acceptance of the approximation
+%      m  : num
+%       number of points to use
+% Usage:
+%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompGaussQaud(f, a, b, bound, m)
+format longe;
+
+[w,x] = GLWeights(m);
+tildec = (b-a)/2*w;
+tildex = (b-a)/2*x + (b+a)/2;
+fx = subs(f, {'x'}, {tildex});
+gq_appx = sum(tildec.*fx);
+
+gq_exp = double(int(f, a, b));
+gq_e = abs(gq_exp - gq_appx);
+gq_bound_flag = gq_e < bound;
+gq_n = m-1;
+end
+
+
+##### SOURCE END #####
+--></body></html>

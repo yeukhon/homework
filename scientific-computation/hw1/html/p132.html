@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>p132</title>
+   <meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-26"><meta name="DC.source" content="p132.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% CSC 301 Scientific Computing Fall 2012</span>
+<span class="comment">% Author:   Yeukhon Wong</span>
+<span class="comment">% Homework #1</span>
+<span class="comment">% Problem P1.3.2 (p.40)</span>
+
+clear <span class="string">all</span>;
+clc;
+
+<span class="comment">% given number of trials 100, step 100, up to 800</span>
+<span class="comment">% step through as a vector of size (number of trials)</span>
+disp(<span class="string">'    n                Uniform                Normal            '</span>)
+<span class="keyword">for</span> n = 100:100:800
+    coeffs = rand(n,3); <span class="comment">% a,b,c for 100 times  [100 by 3]</span>
+    complexes = zeros(n,1);
+    <span class="comment">% for each n-th trial, determines b^2 - 4*a*c &lt; 0 and record the result</span>
+    <span class="keyword">for</span> i = 1:1:n
+        <span class="comment">% the result will be 1 if it is less than zero (true statement)</span>
+        complexes(i) = (coeffs(i, 2).^2 - 4*coeffs(i, 1) * coeffs(i, 3)) &lt; 0;
+    <span class="keyword">end</span>
+    prob_uni = sum(complexes)/n;
+
+    coeffs = randn(n,3);
+    complexes = zeros(n,1);
+    <span class="keyword">for</span> i = 1:1:n
+        complexes(i) = (coeffs(i, 2).^2 - 4*coeffs(i, 1) * coeffs(i, 3)) &lt; 0;
+    <span class="keyword">end</span>
+    prob_norm = sum(complexes)/n;
+    fprintf(<span class="string">'    %3d                %3f                %3f            \n'</span>, n, prob_uni, prob_norm)
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">    n                Uniform                Normal            
+    100                0.770000                0.450000            
+    200                0.775000                0.350000            
+    300                0.746667                0.406667            
+    400                0.725000                0.337500            
+    500                0.742000                0.338000            
+    600                0.761667                0.330000            
+    700                0.744286                0.352857            
+    800                0.743750                0.360000            
+</pre><p class="footer"><br>
+      Published with MATLAB® 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #1
+% Problem P1.3.2 (p.40)
+
+clear all;
+clc;
+
+% given number of trials 100, step 100, up to 800
+% step through as a vector of size (number of trials)
+disp('    n                Uniform                Normal            ')
+for n = 100:100:800
+    coeffs = rand(n,3); % a,b,c for 100 times  [100 by 3]
+    complexes = zeros(n,1);
+    % for each n-th trial, determines b^2 - 4*a*c < 0 and record the result
+    for i = 1:1:n
+        % the result will be 1 if it is less than zero (true statement)
+        complexes(i) = (coeffs(i, 2).^2 - 4*coeffs(i, 1) * coeffs(i, 3)) < 0;  
+    end
+    prob_uni = sum(complexes)/n;
+    
+    coeffs = randn(n,3);
+    complexes = zeros(n,1);
+    for i = 1:1:n
+        complexes(i) = (coeffs(i, 2).^2 - 4*coeffs(i, 1) * coeffs(i, 3)) < 0;
+    end
+    prob_norm = sum(complexes)/n;
+    fprintf('    %3d                %3f                %3f            \n', n, prob_uni, prob_norm)
+end
+##### SOURCE END #####
+--></body></html>

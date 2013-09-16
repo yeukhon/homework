@@ -1,0 +1,162 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>q1</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-20"><meta name="DC.source" content="q1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Yeukhon Wong 8066</span>
+<span class="comment">% CSC 301 Fall 2012</span>
+<span class="comment">% Homework #4.  Problem 1</span>
+
+<span class="comment">% Determine the number of intervals required to approximate</span>
+<span class="comment">% integral(1/(x+4)) from 0 to 2 to within 10^-5 and compute</span>
+<span class="comment">% the approximation:</span>
+<span class="comment">% a) composite trapezoidal rule;</span>
+<span class="comment">% b) composite simpson's rule;</span>
+<span class="comment">% c) composite gaussian quadrature rule</span>
+
+format <span class="string">LONGE</span>;
+<span class="comment">% create a symbolic equation as input to the functions below</span>
+sym <span class="string">x</span>;
+f = sym(<span class="string">'1/(x+4)'</span>);
+a = 0;
+b = 2;
+bound = 10^-5;
+
+<span class="comment">% these function calls returns</span>
+<span class="comment">% appx value, expected value, error value, within bound, number of</span>
+<span class="comment">% intervals, and the step size h</span>
+[t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] = CompTrapez(f, a, b, bound);
+[s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] = CompSimp(f, a, b, bound);
+
+<span class="comment">% For Gauss Qaud we are going to find the first m that makes within bound</span>
+<span class="keyword">for</span> m=2:6
+    [gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n] = CompGaussQaud( f, a, b, bound, m);
+    <span class="keyword">if</span> gq_bound_flag == 1, <span class="keyword">break</span>, <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% tabular prints</span>
+fprintf(<span class="string">'===============================================================================================\n'</span>)
+fprintf(<span class="string">'   method         appx         expect         error         accept(0/1)   # of n     step size  \n'</span>)
+fprintf(<span class="string">'-----------------------------------------------------------------------------------------------\n'</span>)
+fprintf(<span class="string">'  %s    %2.8f     %2.8f     %2.8f         %d          %d         %2.5f\n'</span>, <span class="string">'CompTrapez'</span>, t_appx, t_exp, t_e, t_bound_flag, t_n, t_h)
+fprintf(<span class="string">'-----------------------------------------------------------------------------------------------\n'</span>)
+fprintf(<span class="string">'  %s    %2.8f     %2.8f     %2.8f         %d           %d         %2.5f\n'</span>, <span class="string">'CompSimpsn'</span>, s_appx, s_exp, s_e, s_bound_flag, s_n, s_h)
+fprintf(<span class="string">'-----------------------------------------------------------------------------------------------\n'</span>)
+fprintf(<span class="string">'  %s   %2.8f     %2.8f     %2.8f         %d           %d         %s\n'</span>, <span class="string">'CompGauQaud'</span>, gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n, <span class="string">'unknown'</span>)
+fprintf(<span class="string">'===============================================================================================\n'</span>)
+</pre><pre class="codeoutput">===============================================================================================
+   method         appx         expect         error         accept(0/1)   # of n     step size  
+-----------------------------------------------------------------------------------------------
+  CompTrapez    0.40547064     0.40546511     0.00000553         1          46         0.04382
+-----------------------------------------------------------------------------------------------
+  CompSimpsn    0.40546637     0.40546511     0.00000127         1           6         0.44267
+-----------------------------------------------------------------------------------------------
+  CompGauQaud   0.40546448     0.40546511     0.00000063         1           2         unknown
+===============================================================================================
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Yeukhon Wong 8066
+% CSC 301 Fall 2012
+% Homework #4.  Problem 1
+
+% Determine the number of intervals required to approximate
+% integral(1/(x+4)) from 0 to 2 to within 10^-5 and compute
+% the approximation:
+% a) composite trapezoidal rule;
+% b) composite simpson's rule;
+% c) composite gaussian quadrature rule
+
+format LONGE;
+% create a symbolic equation as input to the functions below
+sym x;
+f = sym('1/(x+4)');
+a = 0;
+b = 2;
+bound = 10^-5;
+
+% these function calls returns
+% appx value, expected value, error value, within bound, number of
+% intervals, and the step size h
+[t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] = CompTrapez(f, a, b, bound);
+[s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] = CompSimp(f, a, b, bound);
+
+% For Gauss Qaud we are going to find the first m that makes within bound
+for m=2:6
+    [gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n] = CompGaussQaud( f, a, b, bound, m);
+    if gq_bound_flag == 1, break, end
+end
+
+% tabular prints
+fprintf('===============================================================================================\n')
+fprintf('   method         appx         expect         error         accept(0/1)   # of n     step size  \n')
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('  %s    %2.8f     %2.8f     %2.8f         %d          %d         %2.5f\n', 'CompTrapez', t_appx, t_exp, t_e, t_bound_flag, t_n, t_h)
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('  %s    %2.8f     %2.8f     %2.8f         %d           %d         %2.5f\n', 'CompSimpsn', s_appx, s_exp, s_e, s_bound_flag, s_n, s_h)
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('  %s   %2.8f     %2.8f     %2.8f         %d           %d         %s\n', 'CompGauQaud', gq_appx, gq_exp, gq_e, gq_bound_flag, gq_n, 'unknown')
+fprintf('===============================================================================================\n')
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,109 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CSInterp</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-04"><meta name="DC.source" content="CSInterp.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Yeukhon Wong</span>
+<span class="comment">% CSC 301 Fall 2012</span>
+<span class="comment">% Homework # 5  Problem #2</span>
+
+
+<span class="comment">% Modify original CSInterp so it uses FFT</span>
+
+<span class="keyword">function</span> F = CSInterp(f)
+<span class="comment">% F = CSInterp(f)</span>
+<span class="comment">% f is a column n vector and n = 2m.</span>
+<span class="comment">% F.a is a column m+1 vector and F.b is a column m-1 vector so that if</span>
+<span class="comment">% tau = (0:n-1)'*pi/m, then</span>
+<span class="comment">%</span>
+<span class="comment">%         f = F.a(1)*cos(0*tau) +...+ F.a(m+1)*cos(m*tau) +</span>
+<span class="comment">%             F.b(1)*sin(tau)   +...+ F.b(m-1)*sin((m-1)*tau)</span>
+
+n = length(f);
+m = n/2;
+y = FFTRecur(f); <span class="comment">% come on... book has the code :/</span>
+F = struct(<span class="string">'a'</span>,y(1:m+1),<span class="string">'b'</span>,y(m+2:n));
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Yeukhon Wong
+% CSC 301 Fall 2012
+% Homework # 5  Problem #2
+
+
+% Modify original CSInterp so it uses FFT
+
+function F = CSInterp(f)
+% F = CSInterp(f)
+% f is a column n vector and n = 2m.
+% F.a is a column m+1 vector and F.b is a column m-1 vector so that if 
+% tau = (0:n-1)'*pi/m, then
+%
+%         f = F.a(1)*cos(0*tau) +...+ F.a(m+1)*cos(m*tau) + 
+%             F.b(1)*sin(tau)   +...+ F.b(m-1)*sin((m-1)*tau)
+
+n = length(f); 
+m = n/2;
+y = FFTRecur(f); % come on... book has the code :/
+F = struct('a',y(1:m+1),'b',y(m+2:n));
+##### SOURCE END #####
+--></body></html>

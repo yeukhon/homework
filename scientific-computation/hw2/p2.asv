@@ -1,0 +1,28 @@
+% CSC 301 Scientific Computing Fall 2012
+% Author: Yeukhon Wong
+% Homework #2
+% Problem P2
+
+clear all;
+clc;
+% Part A
+ax0 = 0, ax1=0.5, ax = 0.25
+
+% degree-one interploation for part a
+[pa_appx, pa_exact, pa_error] = LinearInterp('exp', ax0, ax1, ax)
+
+% Part B
+bx0 = 0.5, bx1 = 1, bx = 0.75
+[pb_appx, pb_exact, pb_error] = LinearInterp('exp', bx0, bx1, bx)
+
+% Part c
+cx0 = 0, cx1 = 1, cx2 = 2
+[pca_appx, pca_exact, pca_error] = QuadInterp('exp', cx0, cx1, cx2, ax)
+
+cx0 = 0, cx1 = 1, cx2 = 2
+[pcb_appx, pcb_exact, pcb_error] = QuadInterp('exp', cx0, cx1, cx2, bx)
+
+% Part D
+fprintf('    x = ?        appx(p1)     appx(p2)   exact(p1)    exact(p2) error (p1)       error(p2)    \n')
+fprintf('    %3.3f        %3.3f            %3.3f    \n', ax, pa_appx, abs(pa_error), abs(pca_error))
+fprintf('    %3.3f        %3.3f            %3.3f    \n', bx, abs(pb_error), abs(pcb_error))

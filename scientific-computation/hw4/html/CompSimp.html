@@ -1,0 +1,177 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CompSimp</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-20"><meta name="DC.source" content="CompSimp.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% CSC 301 Scientific Computing Fall 2012</span>
+<span class="comment">% Author:   Yeukhon Wong</span>
+<span class="comment">% Homework #4</span>
+<span class="comment">% Problem 1</span>
+
+<span class="keyword">function</span> [s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] = CompSimp(f, a, b, bound)
+</pre><pre class="codeinput"><span class="comment">% Use Composite Simpson's Rule to determines</span>
+<span class="comment">% the ideal number of intervals reuired</span>
+<span class="comment">% to approximate input function f to within</span>
+<span class="comment">% input bound, as well as the value of the</span>
+<span class="comment">% approximation and the expected, and value of error.</span>
+<span class="comment">%</span>
+<span class="comment">% Parameters:</span>
+<span class="comment">%      f:  sym</span>
+<span class="comment">%        the function to approximate</span>
+<span class="comment">%      a, b : num</span>
+<span class="comment">%        the start and end point of the integration, respectively</span>
+<span class="comment">%      bound : num</span>
+<span class="comment">%        the numeric range of acceptance of the approximation</span>
+<span class="comment">% Usage:</span>
+<span class="comment">%     [s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] =  CompSimp(f, a, b, bound)</span>
+
+<span class="comment">% first, find the fourth derivative of f and determine the f^4(mu) in</span>
+<span class="comment">% the interval mu = [a, b]</span>
+<span class="comment">% Note we don't step over the entire interval to find mu which is bad. It's</span>
+<span class="comment">% okay for now...</span>
+format <span class="string">LONGE</span>;
+f_4 = diff( diff( diff( diff(f) ) ) );
+f4_mu_a = subs(f_4, {<span class="string">'x'</span>}, {a});
+f4_mu_b = subs(f_4, {<span class="string">'x'</span>}, {b});
+f4_mu_mid = subs(f_4, {<span class="string">'x'</span>}, {(a+b)/2});
+f4_mu = max( [f4_mu_a, f4_mu_mid, f4_mu_b] );
+
+<span class="comment">% next, find the step length h</span>
+<span class="comment">% remember E_simp is |(b-a) f^4(mu) h^4)/180| &lt;= acceptance bound</span>
+top = bound * 180;
+bottom = (b-a) * f4_mu;
+s_h = (top / bottom)^(1/4);
+
+<span class="comment">% s_n is s_h = (b-a)/s_n where s_n is even.</span>
+<span class="comment">% since s_n is even # of intervals, it can also be written as (b-a)/2*m</span>
+s_n = (b-a)/s_h;
+
+<span class="comment">% finally, fix s_n so it becomes even and ceiling</span>
+ns = [ ceil(s_n) ceil(s_n)+1 ceil(s_n)+2];
+ns_mod = mod(ns, 2);
+[v, i] = min(ns_mod); <span class="comment">% locates the first even point</span>
+s_n = ns(i);  <span class="comment">% given the first even point, lookup the ceil(..) in ns</span>
+</pre><p>let us now find the value of the approximation since matlab is based-1, the formula</p><pre class="codeinput">s_appx = double(CompositeSimpson(inline(f), a, b, s_n)); <span class="comment">% approximation</span>
+s_exp = double(int(f, a, b));  <span class="comment">% expected value</span>
+s_e = double(abs(s_exp - s_appx));  <span class="comment">% error value</span>
+s_bound_flag = s_e &lt;= bound;
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #4
+% Problem 1
+
+function [s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] = CompSimp(f, a, b, bound)
+% Use Composite Simpson's Rule to determines
+% the ideal number of intervals reuired
+% to approximate input function f to within
+% input bound, as well as the value of the 
+% approximation and the expected, and value of error.
+%
+% Parameters:
+%      f:  sym
+%        the function to approximate
+%      a, b : num
+%        the start and end point of the integration, respectively
+%      bound : num
+%        the numeric range of acceptance of the approximation
+% Usage:
+%     [s_appx, s_exp, s_e, s_bound_flag, s_n, s_h] =  CompSimp(f, a, b, bound)
+
+% first, find the fourth derivative of f and determine the f^4(mu) in
+% the interval mu = [a, b]
+% Note we don't step over the entire interval to find mu which is bad. It's
+% okay for now...
+format LONGE;
+f_4 = diff( diff( diff( diff(f) ) ) );
+f4_mu_a = subs(f_4, {'x'}, {a});
+f4_mu_b = subs(f_4, {'x'}, {b});
+f4_mu_mid = subs(f_4, {'x'}, {(a+b)/2});
+f4_mu = max( [f4_mu_a, f4_mu_mid, f4_mu_b] );
+
+% next, find the step length h
+% remember E_simp is |(b-a) f^4(mu) h^4)/180| <= acceptance bound
+top = bound * 180;
+bottom = (b-a) * f4_mu;
+s_h = (top / bottom)^(1/4);
+
+% s_n is s_h = (b-a)/s_n where s_n is even.
+% since s_n is even # of intervals, it can also be written as (b-a)/2*m
+s_n = (b-a)/s_h;
+
+% finally, fix s_n so it becomes even and ceiling
+ns = [ ceil(s_n) ceil(s_n)+1 ceil(s_n)+2];
+ns_mod = mod(ns, 2);
+[v, i] = min(ns_mod); % locates the first even point
+s_n = ns(i);  % given the first even point, lookup the ceil(..) in ns
+
+%%
+% let us now find the value of the approximation
+% since matlab is based-1, the formula
+s_appx = double(CompositeSimpson(inline(f), a, b, s_n)); % approximation
+s_exp = double(int(f, a, b));  % expected value
+s_e = double(abs(s_exp - s_appx));  % error value
+s_bound_flag = s_e <= bound;
+##### SOURCE END #####
+--></body></html>

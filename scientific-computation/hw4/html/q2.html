@@ -1,0 +1,168 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>q2</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-20"><meta name="DC.source" content="q2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Yeukhon Wong 8066</span>
+<span class="comment">% CSC 301 Fall 2012</span>
+<span class="comment">% Homework #4.  Problem 2</span>
+
+<span class="comment">% Determine the number of subintervals used for each function</span>
+<span class="comment">% using adaptive quadrature to approximate</span>
+<span class="comment">% 1) sin(1/x) and 2) cos(1/x) from 0.1 to 2 to within 10^-3 bound.</span>
+
+format <span class="string">LONGE</span>;
+
+<span class="comment">% create a symbolic equation as input to the functions below</span>
+sym <span class="string">x</span>;
+f1 = sym(<span class="string">'sin(1.0/x)'</span>);
+f2 = sym(<span class="string">'cos(1.0/x)'</span>);
+a = 0.100000;
+b = 2.000000;
+bound = 10^-3;
+n = 2;
+m = 3;
+
+[f1_n, f1_appx] = AdaptQNC(f1, a, b, 2*n, m, bound, 0, 0);
+
+[f2_n, f2_appx] = AdaptQNC(f2, a, b, 2*n, m, bound, 0, 0);
+f1_exp = double(int(f1, a, b));
+f2_exp = double(int(f2, a, b));
+
+[f1Q, f1Count] = quad(inline(f1), a, b, bound);
+[f2Q, f2Count] = quad(inline(f2), a, b, bound);
+
+f1_e = abs(f1_appx-f1_exp);
+f2_e = abs(f2_appx-f2_exp);
+
+<span class="comment">% tabular prints</span>
+fprintf(<span class="string">'===================================================================================================\n'</span>)
+fprintf(<span class="string">'   func         appx         expect         error         accept(0/1)     subintervals     expect n\n'</span>)
+fprintf(<span class="string">'---------------------------------------------------------------------------------------------------\n'</span>)
+fprintf(<span class="string">'  %s   %2.8f     %2.8f     %2.8f         %d                %d           %d\n'</span>, <span class="string">'sin(1/x)'</span>, f1_appx, f1_exp, f1_e, f1_e&lt;=10^-3, f1_n, f1Count)
+fprintf(<span class="string">'---------------------------------------------------------------------------------------------------\n'</span>)
+fprintf(<span class="string">'  %s   %2.8f     %2.8f     %2.8f         %d                %d           %d\n'</span>, <span class="string">'cos(1/x)'</span>, f2_appx, f2_exp, f2_e, f2_e&lt;=10^-3, f2_n, f2Count)
+fprintf(<span class="string">'===================================================================================================\n'</span>)
+
+<span class="comment">% plot f(x) and g(x)</span>
+figure
+ezplot(f1, [0.1, 2])
+figure
+ezplot(f2, [0.1, 2])
+</pre><pre class="codeoutput">===================================================================================================
+   func         appx         expect         error         accept(0/1)     subintervals     expect n
+---------------------------------------------------------------------------------------------------
+  sin(1/x)   1.14583135     1.14558083     0.00025051         1                21           25
+---------------------------------------------------------------------------------------------------
+  cos(1/x)   0.67391599     0.67383210     0.00008389         1                21           25
+===================================================================================================
+</pre><img vspace="5" hspace="5" src="q2_01.png" alt=""> <img vspace="5" hspace="5" src="q2_02.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% Yeukhon Wong 8066
+% CSC 301 Fall 2012
+% Homework #4.  Problem 2
+
+% Determine the number of subintervals used for each function
+% using adaptive quadrature to approximate
+% 1) sin(1/x) and 2) cos(1/x) from 0.1 to 2 to within 10^-3 bound.
+
+format LONGE;
+
+% create a symbolic equation as input to the functions below
+sym x;
+f1 = sym('sin(1.0/x)');
+f2 = sym('cos(1.0/x)');
+a = 0.100000;
+b = 2.000000;
+bound = 10^-3;
+n = 2;
+m = 3;
+
+[f1_n, f1_appx] = AdaptQNC(f1, a, b, 2*n, m, bound, 0, 0); 
+
+[f2_n, f2_appx] = AdaptQNC(f2, a, b, 2*n, m, bound, 0, 0);
+f1_exp = double(int(f1, a, b));
+f2_exp = double(int(f2, a, b));
+
+[f1Q, f1Count] = quad(inline(f1), a, b, bound);
+[f2Q, f2Count] = quad(inline(f2), a, b, bound);
+
+f1_e = abs(f1_appx-f1_exp);
+f2_e = abs(f2_appx-f2_exp);
+
+% tabular prints
+fprintf('===================================================================================================\n')
+fprintf('   func         appx         expect         error         accept(0/1)     subintervals     expect n\n')
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('  %s   %2.8f     %2.8f     %2.8f         %d                %d           %d\n', 'sin(1/x)', f1_appx, f1_exp, f1_e, f1_e<=10^-3, f1_n, f1Count)
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('  %s   %2.8f     %2.8f     %2.8f         %d                %d           %d\n', 'cos(1/x)', f2_appx, f2_exp, f2_e, f2_e<=10^-3, f2_n, f2Count)
+fprintf('===================================================================================================\n')
+
+% plot f(x) and g(x)
+figure 
+ezplot(f1, [0.1, 2])
+figure 
+ezplot(f2, [0.1, 2])
+##### SOURCE END #####
+--></body></html>

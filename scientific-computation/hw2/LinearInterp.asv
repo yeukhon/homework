@@ -1,0 +1,30 @@
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #1
+% Problem P1.5.1 (p.57)
+
+% Modified Derivative function based on author's solution
+
+function [d, derr, c, cerr] = LinearInterp(fn, x0, x1, x, y0, y1)
+% Interpolate the function fn at x given 
+% two sets of points (x0, y0), (x1, y1).
+% x0 and x1 must be provided as a minimally requirement.
+% 
+% app the value of the interpolation
+% exact the value of the computation using fn
+% err the interpolation error
+%
+% Usage:
+%     [app,exact,err] =  LinearInterp(fn, x0, x1, x)
+%     [app,exact,err] =  LinearInterp(fn, x0, x1, x, y0)
+%     [app,exact,err] =  LinearInterp(fn, x0, x1, x, y0, y1)
+
+if nargin < 5:
+    y0 = feval(fn, x0)
+    y1 = feval(fn, x1)
+elseif nargin < 6:
+    y1 = feval(fn, x1)
+
+left = (y0 * ( (x1 - x)/ (x1 - x0) ))
+right = (y1 * ( (x - x0)/ (x1 - x0) ))
+app = left + right

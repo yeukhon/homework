@@ -1,0 +1,36 @@
+% CSC 301 Scientific Computing Fall 2012
+% Author:   Yeukhon Wong
+% Homework #4
+% Problem 1
+
+function v = CompGaussQaud( f, a, b, bound, m )
+% Use Composite Gaussian quadrature to determines
+% the ideal number of intervals reuired
+% to approximate input function f to within
+% input bound, as well as the value of the 
+% approximation and expected, and value of error.
+%
+% Parameters:
+%      f:  sym
+%        the function to approximate
+%      a, b : num
+%        the start and end point of the integration, respectively
+%      bound : num
+%        the numeric range of acceptance of the approximation
+%      m  : num, optional
+%
+% Usage:
+%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompGaussQaud(f, a, b, bound)
+%     [t_appx, t_exp, t_e, t_bound_flag, t_n, t_h] =  CompGaussQaud(f, a, b, bound, m)
+format longe;
+
+if nargin < 5
+    for i=2:6
+[w,x] = GLWeights(m);
+tildec = (b-a)/2*w;
+tildex = (b-a)/2*x + (b+a)/2;
+f = subs(f, {'x'}, {tildex});
+v = sum(tildec.*f);
+
+end
+

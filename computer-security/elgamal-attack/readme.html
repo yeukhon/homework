@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>CSc 480: ElGamal Attack</title>
+  
+  <style type="text/css">
+  body 
+  {
+  	font-family:Gill Sans MT;
+  	color:#657b83;
+  	background-color:#fdf6e3;
+  	max-width:500pt;
+  	padding-left:25pt;
+  	padding-right:25pt;
+  	padding-bottom:20pt;
+  	margin:0 auto 0 auto;
+  	text-align:justify;
+  }
+  a:link {color:#6c71c4;}
+  a:visited {color:#859900;}
+  a:hover {color:#268bd2;}
+  a:active {color:#d33682;}
+  h1{}
+  h2{border-style:solid;
+   text-align:center;
+  }
+  h3
+  {
+  	margin-bottom:2pt;
+  	/*color:#268bd2;*/
+  	font-weight:bold;
+  }
+  strong
+  {
+  	color:#d33682;
+  	font-weight:bolder;
+  }
+  em
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bolder;
+  }
+  code
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  table.sourceCode
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  pre.sourceCode
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  .math
+  {
+      /*background-color:#eee8d5;*/
+      color:#586e75;
+      font-family:Times New Roman;
+  }
+  /*use a contextual style to undo the blue-ness:*/
+  .math em
+  {
+      color:#586e75;
+  	font-weight:normal;
+  }
+  .descrip
+  {
+  	max-width:500pt;
+  	padding-left:25pt;
+  	text-align:justify;
+  }
+  .descripbig
+  {
+  	max-width:575pt;
+  	padding-left:0pt;
+  	text-align:justify;
+  }
+  .emph
+  {
+  	color:#d33682;
+  	font-weight:bolder;
+  }
+  .litem
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bolder;
+  }
+  .hl
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  }
+  .required
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bold;
+  }
+  .inputbox
+  {
+  	background-color:#eee8d5;
+  	color:#586e75;
+  	font-family:Gill Sans MT;
+  	font-weight:bolder;
+  }
+  </style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">CSc 480: ElGamal Attack</h1>
+</div>
+<h2 id="due-friday-september-28th-1159pm"><em>Due:</em> Friday, September 28th @ 11:59pm</h2>
+<h2 id="synopsis">Synopsis</h2>
+<p>In this project you are asked to attack the semantic security of a particular implementation of the ElGamal cryptosystem. In particular, we’ll attack <a href="https://www.dlitz.net/software/pycrypto/">pycrypto</a>’s implementation. Here’s what you can expect to learn from this:</p>
+<ul>
+<li>Solid understanding of what semantic security means</li>
+<li>In-depth understanding of ElGamal</li>
+<li>A little about number theory</li>
+</ul>
+<h2 id="details">Details</h2>
+<h3 id="getting-the-code">Getting the Code</h3>
+<p>The first thing to do is download / install the <a href="https://www.dlitz.net/software/pycrypto/">pycrypto</a> package. On a number of linux distributions, you can find it in the package manager. Once you have your hands on the code, it is time to start hacking.</p>
+<h3 id="hacking-the-code">Hacking the code</h3>
+<p>Go find the ElGamal module, and look through the source. If you are like me, you will notice that they use <span class="math">ℤ <sub><em>p</em></sub><sup> × </sup></span> as the plaintext space, for a safe prime <span class="math"><em>p</em></span>.</p>
+<p>As it turns out, this choice yields a system which is not semantically secure. There is a little bit of information that leaks out of every ciphertext about the plaintext. Your job is to figure out what it is. In particular, I want you to implement an adversary for the semantic security game that <strong>wins with probability 1</strong>.</p>
+<h3 id="explanation-of-files">Explanation of files</h3>
+<p>Some (actually, a lot) of the work has already been done for you. I have written a python program that will play the role of the challenger. Your job is to implement the adversary. You’ll communicate with the challenger via standard input and standard output using the <a href="http://docs.python.org/library/pickle.html">pickle module</a> to share python objects. Don’t worry – I’ve already given you some skeleton code for that too. Here are the provided files:</p>
+<ul>
+<li><code>adversary.py</code>: This is the main file where you will do your work. There is already a lot of skeleton code that shows you how to communicate with the challenger program.</li>
+<li><code>chall.py</code>: This is the challenger for the game. It sends you the public key, and the encryption of a randomly chosen message, etc.</li>
+<li><code>numbthy.py</code>: This is a python library for simple number-theoretic operations. I stole it from some guy on the internet. License is included.</li>
+<li><code>key2.pkl</code>: A test key to use, but your attack code should work for any key.</li>
+</ul>
+<h3 id="testing-your-code">Testing your code</h3>
+<p>Just run <code>./adversary.py</code>, and it should play the game with the challenger. At the end, (provided the python interpreter doesn’t hate your code) it will tell you whether or not you got the answer right. Of course, randomly guessing will get you a right answer with probability <span class="math">1 / 2</span>, so you will need to run a lot of tests, and never be wrong.</p>
+<p><strong>NOTE:</strong> I wrote this on Arch linux, so the python interpreter for version 2.x is actually <code>python2</code>. Change the shebang line in your code if needed.</p>
+<h2 id="hints">Hints</h2>
+<p>I don’t want to give it all away and spoil the fun, so I’ll start with something small. You can ask me later if you have trouble. So, one thing that might be useful is to look at the <em>multiplicative group</em> of <span class="math">ℤ <sub><em>p</em></sub></span> broken down ala the Chinese remainder theorem. It factors into a nontrivial product, and as it turns out, some of this structure still shows up in the ciphertext. Moreover, you can extract it efficiently.</p>
+<h2 id="submission-procedure">Submission Procedure</h2>
+<p>Turn your assignment in <a href="http://www-cs.ccny.cuny.edu/~wes/CSC480F12/upload.html">here</a>. A few <strong>important notes:</strong></p>
+<ul>
+<li><em>Save the receipt.</em> You will need this to get your homework score back later! The easiest thing to do is just save the page.</li>
+<li><em>Don’t change the filename.</em> Just edit and submit the file from the repository (in this case <code>adversary.py</code>). If you turn a file with a different name, it will not be graded.</li>
+<li><em>Respect the deadline.</em> Turning in homework past the deadline will be noticed, and may lead to a zero.</li>
+</ul>
+<!--  links  -->
+
+
+
+
+
+
+</body>
+</html>

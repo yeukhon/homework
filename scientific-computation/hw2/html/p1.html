@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>p1</title>
+   <meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-10-11"><meta name="DC.source" content="p1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% CSC 301 Scientific Computing Fall 2012</span>
+<span class="comment">% Author: Yeukhon Wong</span>
+<span class="comment">% Homework #2</span>
+<span class="comment">% Problem P1</span>
+
+clc;
+clear <span class="string">all</span>;
+
+<span class="comment">% these symbols are placeholder for symbolic solution (I learned this when</span>
+<span class="comment">% I was a freshman ...)</span>
+syms <span class="string">y</span> <span class="string">a2</span> <span class="string">a3</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% [ 0.5  0.25  0.125  ]    [ a2 ]    [ y ]</span>
+<span class="comment">% [  1     1     1    ]    [ a3 ]  = [ 3 ]</span>
+<span class="comment">% [  2     4     8    ]    [ 6  ]    [ 2 ]</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+M = [0.5 0.25 0.125; 1 1 1; 2 4 8];
+t = [a2 a3 6]';
+rs = [y 3 2]';
+
+<span class="comment">% the solve(...) function will solve symbolic equations</span>
+<span class="comment">% see help solve</span>
+sol = solve(M * t == r);
+disp(<span class="string">'the results are: \n'</span>)
+fprintf(<span class="string">'%3.3f, %3.3f, %3.3f, %3.3f, %3.3f'</span>, 0.00, sol.a2, sol.a3, 6.00, sol.y)
+
+<span class="comment">% Acknowledgement</span>
+<span class="comment">% I found solve(...) myself. But I didn't know how to use the '==' operator</span>
+<span class="comment">% properly so that I could equate the solution (rs) to the equations.</span>
+<span class="comment">% I ended up getting help from someone online. But I did the verification</span>
+<span class="comment">% on paper by hand before I did the coding.</span>
+
+<span class="comment">% This is my question.</span>
+<span class="comment">% http://stackoverflow.com/questions/12827411/solving-for-the-coefficent-of-linear-equations-with-one-known-coefficent</span>
+</pre><pre class="codeoutput">Undefined function or variable 'r'.
+
+Error in ==&gt; p1 at 25
+sol = solve(M * t == r);
+</pre><p class="footer"><br>
+      Published with MATLAB® 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+% CSC 301 Scientific Computing Fall 2012
+% Author: Yeukhon Wong
+% Homework #2
+% Problem P1
+
+clc;
+clear all;
+
+% these symbols are placeholder for symbolic solution (I learned this when
+% I was a freshman ...)
+syms y a2 a3
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [ 0.5  0.25  0.125  ]    [ a2 ]    [ y ]
+% [  1     1     1    ]    [ a3 ]  = [ 3 ]
+% [  2     4     8    ]    [ 6  ]    [ 2 ]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+M = [0.5 0.25 0.125; 1 1 1; 2 4 8];
+t = [a2 a3 6]';
+rs = [y 3 2]';
+
+% the solve(...) function will solve symbolic equations
+% see help solve
+sol = solve(M * t == r);
+disp('the results are: \n')
+fprintf('%3.3f, %3.3f, %3.3f, %3.3f, %3.3f', 0.00, sol.a2, sol.a3, 6.00, sol.y)
+
+% Acknowledgement
+% I found solve(...) myself. But I didn't know how to use the '==' operator
+% properly so that I could equate the solution (rs) to the equations.
+% I ended up getting help from someone online. But I did the verification
+% on paper by hand before I did the coding.
+
+% This is my question.
+% http://stackoverflow.com/questions/12827411/solving-for-the-coefficent-of-linear-equations-with-one-known-coefficent
+##### SOURCE END #####
+--></body></html>

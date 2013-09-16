@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>CSc 480: Rock-Paper-Scissors</title>
+  
+  <style type="text/css">
+  body 
+  {
+  	font-family:Gill Sans MT;
+  	color:#657b83;
+  	background-color:#fdf6e3;
+  	max-width:500pt;
+  	padding-left:25pt;
+  	padding-right:25pt;
+  	padding-bottom:20pt;
+  	margin:0 auto 0 auto;
+  	text-align:justify;
+  }
+  a:link {color:#6c71c4;}
+  a:visited {color:#859900;}
+  a:hover {color:#268bd2;}
+  a:active {color:#d33682;}
+  h1{}
+  h2{border-style:solid;
+   text-align:center;
+  }
+  h3
+  {
+  	margin-bottom:2pt;
+  	/*color:#268bd2;*/
+  	font-weight:bold;
+  }
+  strong
+  {
+  	color:#d33682;
+  	font-weight:bolder;
+  }
+  em
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bolder;
+  }
+  code
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  table.sourceCode
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  pre.sourceCode
+  {
+      background-color:#eee8d5;
+      color:#586e75;
+  }
+  .math
+  {
+      /*background-color:#eee8d5;*/
+      color:#586e75;
+      font-family:Times New Roman;
+  }
+  /*use a contextual style to undo the blue-ness:*/
+  .math em
+  {
+      color:#586e75;
+  	font-weight:normal;
+  }
+  .descrip
+  {
+  	max-width:500pt;
+  	padding-left:25pt;
+  	text-align:justify;
+  }
+  .descripbig
+  {
+  	max-width:575pt;
+  	padding-left:0pt;
+  	text-align:justify;
+  }
+  .emph
+  {
+  	color:#d33682;
+  	font-weight:bolder;
+  }
+  .litem
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bolder;
+  }
+  .hl
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  }
+  .required
+  {
+  	color:#268bd2;
+  	font-style:italic;
+  	font-weight:bold;
+  }
+  .inputbox
+  {
+  	background-color:#eee8d5;
+  	color:#586e75;
+  	font-family:Gill Sans MT;
+  	font-weight:bolder;
+  }
+  </style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">CSc 480: Rock-Paper-Scissors</h1>
+</div>
+<h2 id="due-thursday-october-11th-1159pm"><em>Due:</em> Thursday, October 11th @ 11:59pm</h2>
+<h2 id="synopsis">Synopsis</h2>
+<p>You are to implement a simple commitment scheme that is computationally binding, and under a (seemingly unverifiable) assumption about SHA512, statistically hiding. You’ll then use that to implement <a href="http://en.wikipedia.org/wiki/Rock-paper-scissors">Rock-Paper-Scissors</a> over a line (for simplicity, we’ll use stdin / stdout text streams).</p>
+<div class="figure">
+<img src="http://upload.wikimedia.org/wikipedia/commons/e/e6/Rock_paper_scissors.jpg" alt="Fig. 1 How to Play Rock-Paper-Scissors." /><p class="caption">Fig. 1 How to Play Rock-Paper-Scissors.</p>
+</div>
+<h2 id="details">Details</h2>
+<p>You’ll compute the commitment of a value <span class="math"><em>v</em></span> as <span class="math"><em>C</em> = <em>S</em><em>H</em><em>A</em>512(<em>r</em>∣∣<em>v</em>)</span> where <span class="math"><em>r</em></span> is a random value. To reveal the value, you simply expose <span class="math"><em>v</em></span> and the random string <span class="math"><em>r</em></span>. As for the game, the first party will send a committed value of their item, the second party will respond with their item (in the clear) and then the first party will reveal their answer, and a winner will be determined (unless there is a draw).</p>
+<h3 id="explanation-of-files">Explanation of files</h3>
+<p>99% of the work is already done. Just finish implementing the file <code>committer.py</code>. That program will communicate with <code>verifier.py</code>. Just like the last time, we’ll use the <a href="http://docs.python.org/library/pickle.html">pickle module</a> to share python objects.</p>
+<h3 id="testing-your-code">Testing your code</h3>
+<p>Just run <code>./committer.py</code> and see what happens.</p>
+<p><strong>NOTE:</strong> Again, you may need to change the interpreter from <code>python2</code> to <code>python</code>.</p>
+<h2 id="submission-procedure">Submission Procedure</h2>
+<p>Turn your assignment in <a href="http://www-cs.ccny.cuny.edu/~wes/CSC480F12/upload.html">here</a>. A few <strong>important notes:</strong></p>
+<ul>
+<li><em>Save the receipt.</em> You will need this to get your homework score back later! The easiest thing to do is just save the page.</li>
+<li><em>Don’t change the filename.</em> Just edit and submit the file from the repository (in this case <code>committer.py</code>). If you turn a file with a different name, it will not be graded.</li>
+<li><em>Respect the deadline.</em> Turning in homework past the deadline will be noticed, and may lead to a zero.</li>
+</ul>
+<!--  links  -->
+
+
+
+
+
+</body>
+</html>
