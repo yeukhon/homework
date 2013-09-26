@@ -72,12 +72,12 @@ My attempt is as follows. w^R is a reptition of {0,1,2,3, ....}. We can build a 
 accepts w. Start with R = 0, enumerate by dovetail technique (see http://en.wikipedia.org/wiki/Dovetailing_%28computer_science%29),
 we can start building up new input of w repetition from {0,1,2,3,4....}. 
 
-     0  1 2 3 4 5
-  0  // 
-  1 |/
-  2
-  3
-  4        (dovetail technique)
+         0  1 2 3 4 5
+      0  // 
+      1 |/
+      2
+      3
+      4        (dovetail technique)
 
 
 Suppose there exists a TM T that decides a turing machine T1 (decides w^r) which decides on TM T2 (decides on input (w)).
