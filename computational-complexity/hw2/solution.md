@@ -16,8 +16,9 @@ infinite loop is the ATM problem:
     If on input w we can tell it is in an infinite loop we must halt on input w either
     accepting or rejecting. But infinite loop never reaches a final state, which is
     a useless state in the original problem.
-    How can we tell if w is acceptable/hatable? This is ATM problem itself by definition - 
-    for ``ATM = { <M,w>: M accepts }``.
+
+How can we tell if w is acceptable/hatable? This is ATM problem itself by definition - 
+for ``ATM = { <M,w>: M accepts }``.
 
 (another way to think of this problem is by thinking of a sequential computer program
 ever reaches a particular line).
@@ -81,9 +82,12 @@ we can start building up new input of w repetition from {0,1,2,3,4....}.
 
 
 Suppose there exists a TM T that decides a turing machine T1 (decides w^r) which decides on TM T2 (decides on input (w)).
-T2(w) accepts if w is accepted
-T1(T2, w^r) accepts if w^r is accepted given from T2
-T(T1, w) accepts.
+
+* T2(w) accepts if w is accepted
+
+* T1(T2, w^r) accepts if w^r is accepted given from T2
+
+* T(T1, w) accepts.
 
 As we feed in the new input (as we enumerate all repetition of the same size of the natural number
 set), we feed that into another TM that decides w^R. 
